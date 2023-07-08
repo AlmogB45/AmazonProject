@@ -1,0 +1,4 @@
+Harry Potter and the Philosopher's Stone, J.K. Rowling, Price: 9.99, ISBN: 9780545162074
+Harry Potter and the Half-Blood Prince, J.K. Rowling, Price: 11.99,  ISBN: 9781338299205
+Hunger Games, Suzanne Collins, Price: 12.99, ISBN: 9780439023481
+Mockingjay (Hunger Games Trilogy), Suzanne Collins, Price: 14.95, ISBN: 9780439023511
