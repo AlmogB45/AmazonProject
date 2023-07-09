@@ -5,15 +5,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 // HELLO
 import static java.lang.System.exit;
 
-public class Menu {
+public class MenuManager {
     private static Scanner scanner;
-    private static final String FILE_PATH = "src/resources/books.txt"; // populate this in Menu()
+
 
     public void printMenu(String[] options) {
         for (String option : options) {
@@ -59,7 +57,7 @@ public class Menu {
     private void searchBook() throws IOException {
         System.out.print("Enter book name: ");
         String input = scanner.next();
-        List<String> matches = searchFile(input);
+        List<String> matches = Main.searchFile(input);
 
         for (String match : matches) {
             System.out.println("\u001b[36m" + match + "\u001b[0m");
@@ -73,7 +71,7 @@ public class Menu {
     private static void option3() throws IOException {
         List<String> matches = new ArrayList<>();
 
-        File file = new File(FILE_PATH);
+        File file = new File(Main.FILE_PATH);
         FileReader reader = new FileReader(file);
         BufferedReader bufferedReader = new BufferedReader(reader);
 
@@ -102,7 +100,7 @@ public class Menu {
         }
 
         // Check if the book is available for purchase
-        file = new File(FILE_PATH);
+        file = new File(Main.FILE_PATH);
         reader = new FileReader(file);
         bufferedReader = new BufferedReader(reader);
 
@@ -128,24 +126,23 @@ public class Menu {
     }
 
 
-    public static List<String> searchFile(String keyword) throws IOException {
-            List<String> matches = new ArrayList<>();
+    public MenuManager() {
+        System.out.println("1) Login");
+        System.out.println("2) Register");
+        Scanner in = new Scanner(System.in);
+        int choice = in.nextInt();
+        switch (choice) {
+            case 1:
+                LoginManager loginManager = new LoginManager();
+                loginManager.login();
+                Menu();
 
-            File file = new File(FILE_PATH);
-            FileReader reader = new FileReader(file);
-            BufferedReader bufferedReader = new BufferedReader(reader);
-
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                Pattern pattern = Pattern.compile(keyword);
-                Matcher matcher = pattern.matcher(line);
-                if (matcher.find()) {
-                    matches.add(line);
-                }
-            }
-
-            return matches;
+                break;
+            case 2:
+                System.out.println("Hey");
         }
+    }
+
 
 
 
