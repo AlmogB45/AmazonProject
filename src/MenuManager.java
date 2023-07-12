@@ -5,27 +5,30 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
-// HELLO
 import static java.lang.System.exit;
 
 public class MenuManager {
+    static String cyan = "\u001b[36m";
+    static String red = "\u001B[31m";
+    static String green = "\u001b[32m";
+    static String white = "\u001b[0m";
     private static Scanner scanner;
 
 
     public void printMenu(String[] options) {
         for (String option : options) {
-            System.out.println("\u001b[32m" + option + "\u001b[0m");
+            System.out.println(green + option);
         }
-        System.out.print("Choose your option : ");
+        System.out.print(white+"Choose your option : ");
     }
 
     void Menu() {
         int option = 1; // think why initialized with "1"
+        System.out.println(white+"\n|---Welcome to Amazon!---|\n");
         String[] options = {"I - Search for a book",
                 "II - View user details",
                 "III - Purchase a book",
-                "IV - Logout"
+                "IV - Logout \n"
         };
         scanner = new Scanner(System.in);
 
@@ -35,7 +38,16 @@ public class MenuManager {
                 option = scanner.nextInt();
                 switch (option) {
                     case 1:
-                        searchBook();
+                        // Add new submenu
+                        System.out.println(green+"How do you want to search for your book?");
+                        System.out.println(white+ "1. By Name");
+                        System.out.println(white+ "2. By ISBN");
+                        int subOption = scanner.nextInt();
+                        if (subOption == 1) {
+                            searchBook();
+                        } else if (subOption == 2) {
+                            searchISBN();
+                        }
                         break;
                     case 2:
                         option2(); // rename all optionX functions to meaningful names
@@ -47,7 +59,7 @@ public class MenuManager {
                         exit(0);
                 }
             } catch (Exception ex) {
-                System.out.println("\u001b[31m" + "Please enter an integer value between 1 and " + options.length + "\u001b[0m");
+                System.out.println(red + "Please enter an integer value between 1 and " + options.length);
                 scanner.next();
             }
         }
@@ -55,74 +67,62 @@ public class MenuManager {
 
     // Options
     private void searchBook() throws IOException {
-        System.out.print("Enter book name: ");
+        System.out.print(white+ "Enter book name: ");
         String input = scanner.next();
         List<String> matches = FileHandler.searchFile(input);
 
+        System.out.println("\nFound " + matches.size() + " results matching: '" +input+"'");
         for (String match : matches) {
-            System.out.println("\u001b[36m" + match + "\u001b[0m");
+            System.out.println(cyan+ "\n" +match + "\n");
         }
     }
 
-    private static void option2() {
-        System.out.println("Thanks for choosing option 2");
-    }
-
-    private static void option3() throws IOException {
-        List<String> matches = new ArrayList<>();
-
-        File file = new File(FileHandler.FILE_PATH);
-        FileReader reader = new FileReader(file);
-        BufferedReader bufferedReader = new BufferedReader(reader);
-
-        String line;
-        while ((line = bufferedReader.readLine()) != null) {
-            if (line.matches("[0-9]+")) {
-                matches.add(line);
-            }
-        }
-
-        for (String match : matches) {
-            System.out.println("\u001b[36m" + match + "\u001b[0m");
-        }
-        System.out.println("Please enter the ISBN of the book you wish to purchase: ");
-        String isbn;
-        try {
-            isbn = scanner.nextLine();
-        } catch (Exception ex) {
-            System.out.println("Please enter a string that contains only numbers");
-            return;
-        }
+    private static void searchISBN() throws IOException {
+        System.out.print("Enter ISBN: ");
+        String isbn = scanner.next();
 
         if (!isbn.matches("[0-9]+")) {
-            System.out.println("Invalid ISBN");
+            System.out.println("ISBN must only contain numbers.");
             return;
         }
 
-        // Check if the book is available for purchase
-        file = new File(FileHandler.FILE_PATH);
-        reader = new FileReader(file);
-        bufferedReader = new BufferedReader(reader);
-
-        while ((line = bufferedReader.readLine()) != null) {
-            if (line.contains(isbn)) {
-                // Book is available for purchase
+        if (isbn.length() < 13) {
+            System.out.println("ISBN must be 13 digits long or more.");
+            return;
+        }
+        ArrayList<Book> booklist = FileHandler.readBooksFromFile(Main.FILE_PATH);
+        boolean bookFound = false;
+        for (int i = 0; i < booklist.size(); i++) {
+            Book book = booklist.get(i);
+            if (book.getIsbn().equals(isbn)) {
+                System.out.println("Book found:");
+                System.out.println("Title: " + book.getTitle());
+                System.out.println("Author: " + book.getAuthor());
+                System.out.println("ISBN: " + book.getIsbn());
+                System.out.println("Price: " + book.getPrice());
+                bookFound = true;
                 break;
             }
         }
+        if (!bookFound) {
+            System.out.println("No book found with ISBN: " + isbn);
+}
 
-        if (line == null) {
-            // Book is not available for purchase
-            System.out.println("Book is not available for purchase");
-            return;
-        }
+    }
 
-        // Mark the book as purchased and add it to the user's purchase history
-        // TODO: Implement this logic
 
-        // Display a confirmation message with the details of the purchased book
-        System.out.println("Book purchased successfully!");
-        System.out.println("ISBN: " + isbn);
+    private static void option2() {
+        ArrayList<User> users = FileHandler.readUsersFromFile(Main.USER_PATH);
+        String username = LoginManager.user;
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).getEmail().equals(username)) {
+                System.out.println("\nName : " +users.get(i).getName() +"\nEmail : "+ users.get(i).getEmail() + "\nAddress : " +users.get(i).getAdress()+"\nPassword : "+users.get(i).getPassword()+"\n");
+            }
+    }
+}
+
+    private static void option3() {
+
     }
 
 

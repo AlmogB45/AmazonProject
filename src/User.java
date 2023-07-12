@@ -5,7 +5,7 @@ public class User {
     private String adress;
     private String email;
     private String password;
-    private ArrayList <Book> purchasedBooks;//livres acheté
+    private ArrayList <Book> purchasedBooks;
 
     public User(String name, String town, String email, String password){
         this.name = name;
@@ -40,8 +40,6 @@ public class User {
     }
 
     public String displayUserDetails() {
-        /*charge les utilisateurs du fichier de données utilisateur dans les utilisateurs
-        ArrayList affiche les détails de l'utilisateur et les livres achetés*/
         String str = "name : "+getName()+" address :"+ getAdress() +" mail : " + getEmail() + " password : " + getPassword();
         return str;
     }

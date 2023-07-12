@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Scanner;
 
 public class FileHandler {
     public static ArrayList<Book> books = new ArrayList<>();
@@ -34,8 +35,9 @@ public class FileHandler {
 
         return users;
     }
+
     public static ArrayList<Book> readBooksFromFile(String fileName){
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(Main.FILE_PATH))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] data = line.split("\\|");
@@ -55,15 +57,12 @@ public class FileHandler {
         }
 
         return books;
-    }
-
-    static final String FILE_PATH = "src/resources/books.txt"; // populate this in Menu()
-    static final String USER_PATH = "src/resources/users.txt";
+}
 
     public static List<String> searchFile(String keyword) throws IOException {
         List<String> matches = new ArrayList<>();
 
-        File file = new File(FILE_PATH);
+        File file = new File(Main.FILE_PATH);
         FileReader reader = new FileReader(file);
         BufferedReader bufferedReader = new BufferedReader(reader);
 
@@ -79,6 +78,7 @@ public class FileHandler {
 
         return matches;
     }
+
 }
 
 
