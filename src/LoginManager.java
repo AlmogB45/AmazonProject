@@ -19,7 +19,7 @@ public class LoginManager {
         String red = "\u001B[31m";
         String reset = "\u001B[0m";
 
-        ArrayList<User> users = FileHandler.readUsersFromFile(Main.USER_PATH);
+        ArrayList<User> users = FileHandler.readUsersFromFile(FileHandler.USER_PATH);
 
         User authenticatedUser = null;
 

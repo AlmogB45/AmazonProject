@@ -57,7 +57,7 @@ public class MenuManager {
     private void searchBook() throws IOException {
         System.out.print("Enter book name: ");
         String input = scanner.next();
-        List<String> matches = Main.searchFile(input);
+        List<String> matches = FileHandler.searchFile(input);
 
         for (String match : matches) {
             System.out.println("\u001b[36m" + match + "\u001b[0m");
@@ -71,7 +71,7 @@ public class MenuManager {
     private static void option3() throws IOException {
         List<String> matches = new ArrayList<>();
 
-        File file = new File(Main.FILE_PATH);
+        File file = new File(FileHandler.FILE_PATH);
         FileReader reader = new FileReader(file);
         BufferedReader bufferedReader = new BufferedReader(reader);
 
@@ -100,7 +100,7 @@ public class MenuManager {
         }
 
         // Check if the book is available for purchase
-        file = new File(Main.FILE_PATH);
+        file = new File(FileHandler.FILE_PATH);
         reader = new FileReader(file);
         bufferedReader = new BufferedReader(reader);
 
@@ -142,31 +142,6 @@ public class MenuManager {
                 System.out.println("Hey");
         }
     }
-
-
-
-
-//    public class SearchFile {
-//
-//        public static List<String> searchFile(String keyword) throws IOException {
-//            List<String> matches = new ArrayList<>();
-//
-//            File file = new File(FILE_PATH);
-//            FileReader reader = new FileReader(file);
-//            BufferedReader bufferedReader = new BufferedReader(reader);
-//
-//            String line;
-//            while ((line = bufferedReader.readLine()) != null) {
-//                Pattern pattern = Pattern.compile(keyword);
-//                Matcher matcher = pattern.matcher(line);
-//                if (matcher.find()) {
-//                    matches.add(line);
-//                }
-//            }
-//
-//            return matches;
-//        }
-//    }
 }
 
 
