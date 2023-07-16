@@ -2,16 +2,17 @@ import java.util.ArrayList;
 
 public class User {
     private String name;
-    private String adress;
+    private String address;
     private String email;
     private String password;
-    private ArrayList <Book> purchasedBooks;
+    private static ArrayList<Book> purchasedBooks;
 
     public User(String name, String town, String email, String password){
         this.name = name;
-        this.adress = town;
+        this.address = town;
         this.email = email;
         this.password = password;
+        this.purchasedBooks = new ArrayList<>();
     }
 
     public User(String email, String password){
@@ -23,8 +24,8 @@ public class User {
         return name;
     }
 
-    public String getAdress() {
-        return adress;
+    public String getAddress() {
+        return address;
     }
 
     public String getEmail() {
@@ -35,12 +36,27 @@ public class User {
         return password;
     }
 
-    public ArrayList<Book> getPurchasedBooks() {
+    public static ArrayList<Book> getPurchasedBooks() {
         return purchasedBooks;
     }
 
+    public void purchaseBooksFromFile(String fileName, String searchParameter) {
+        ArrayList<Book> books = FileHandler.readBooksFromFile(fileName);
+        for (Book book : books) {
+            if (book.getIsbn().equals(searchParameter) || book.getTitle().equalsIgnoreCase(searchParameter)) {
+                purchasedBooks.add(book);
+            }
+        }
+    }
+
+    public void displayPurchasedBooks() {
+        for (Book book : purchasedBooks) {
+            System.out.println(book.getTitle() + " (" + book.getIsbn() + ")");
+        }
+    }
+
     public String displayUserDetails() {
-        String str = "name : "+getName()+" address :"+ getAdress() +" mail : " + getEmail() + " password : " + getPassword();
+        String str = "name : "+getName()+" address :"+ getAddress() +" mail : " + getEmail() + " password : " + getPassword();
         return str;
     }
 

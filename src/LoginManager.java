@@ -3,6 +3,7 @@ import java.util.Scanner;
 
 public class LoginManager {
 
+    private static User authenticatedUser = null;
     public static String user = "";
 
     public static void login() {
@@ -39,6 +40,10 @@ public class LoginManager {
             System.out.println(" ");
             login();
         }
+        return authenticatedUser;
+    }
+
+    public static User getAuthenticatedUser() {
         return authenticatedUser;
     }
 

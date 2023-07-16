@@ -1,9 +1,5 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 import static java.lang.System.exit;
 
@@ -19,12 +15,12 @@ public class MenuManager {
         for (String option : options) {
             System.out.println(green + option);
         }
-        System.out.print(white+"Choose your option : ");
+        System.out.print(white + "Choose your option : ");
     }
 
     void Menu() {
         int option = 1; // think why initialized with "1"
-        System.out.println(white+"\n|---Welcome to Amazon!---|\n");
+        System.out.println(white + "\n|---Welcome to Amazon!---|\n");
         String[] options = {"I - Search for a book",
                 "II - View user details",
                 "III - Purchase a book",
@@ -39,9 +35,9 @@ public class MenuManager {
                 switch (option) {
                     case 1:
                         // Add new submenu
-                        System.out.println(green+"How do you want to search for your book?");
-                        System.out.println(white+ "1. By Name");
-                        System.out.println(white+ "2. By ISBN");
+                        System.out.println(green + "How do you want to search for your book?");
+                        System.out.println(white + "1. By Name");
+                        System.out.println(white + "2. By ISBN");
                         int subOption = scanner.nextInt();
                         if (subOption == 1) {
                             searchBook();
@@ -50,10 +46,10 @@ public class MenuManager {
                         }
                         break;
                     case 2:
-                        option2(); // rename all optionX functions to meaningful names
+                        userDetails(); // rename all optionX functions to meaningful names
                         break;
                     case 3:
-                        option3(); // rename all optionX functions to meaningful names
+                        purchaseBook(); // rename all optionX functions to meaningful names
                         break;
                     case 4:
                         exit(0);
@@ -67,15 +63,17 @@ public class MenuManager {
 
     // Options
     private void searchBook() throws IOException {
-        System.out.print(white+ "Enter book name: ");
-        String input = scanner.next();
-        List<String> matches = FileHandler.searchFile(input);
+        scanner = new Scanner(System.in);
+        System.out.print("Enter book name: ");
+        String input = scanner.nextLine();
+        ArrayList<Book> bookTitle = FileHandler.readBooksFromFile(Main.FILE_PATH);
+        for (int i = 0; i < bookTitle.size(); i++) {
+            if (bookTitle.get(i).getTitle().contains(input))
+                System.out.println(cyan + "TITLE: " + white + bookTitle.get(i).getTitle() + cyan + " AUTHOR:" + white + bookTitle.get(i).getAuthor() + cyan + " Price: " + white + bookTitle.get(i).getPrice() + cyan + " ISBN: " + white + bookTitle.get(i).getIsbn());
 
-        System.out.println("\nFound " + matches.size() + " results matching: '" +input+"'");
-        for (String match : matches) {
-            System.out.println(cyan+ "\n" +match + "\n");
         }
     }
+
 
     private static void searchISBN() throws IOException {
         System.out.print("Enter ISBN: ");
@@ -96,34 +94,64 @@ public class MenuManager {
             Book book = booklist.get(i);
             if (book.getIsbn().equals(isbn)) {
                 System.out.println("Book found:");
-                System.out.println("Title: " + book.getTitle());
-                System.out.println("Author: " + book.getAuthor());
-                System.out.println("ISBN: " + book.getIsbn());
-                System.out.println("Price: " + book.getPrice());
+                System.out.println(cyan + "Title: " + white + book.getTitle());
+                System.out.println(cyan + "Author: " + white + book.getAuthor());
+                System.out.println(cyan + "ISBN: " + white + book.getIsbn());
+                System.out.println(cyan + "Price: " + white + book.getPrice());
                 bookFound = true;
                 break;
             }
         }
         if (!bookFound) {
             System.out.println("No book found with ISBN: " + isbn);
-}
+        }
 
     }
 
 
-    private static void option2() {
+    private static void userDetails() {
         ArrayList<User> users = FileHandler.readUsersFromFile(Main.USER_PATH);
         String username = LoginManager.user;
         for (int i = 0; i < users.size(); i++) {
             if (users.get(i).getEmail().equals(username)) {
-                System.out.println("\nName : " +users.get(i).getName() +"\nEmail : "+ users.get(i).getEmail() + "\nAddress : " +users.get(i).getAdress()+"\nPassword : "+users.get(i).getPassword()+"\n");
+                System.out.println(cyan + "Name: " + white + users.get(i).getName() + cyan + "\nEmail: " + white + users.get(i).getEmail() + cyan + "\nAddress:" + white + users.get(i).getAddress() + cyan + "\nPassword: " + white + users.get(i).getPassword());
+                System.out.println(cyan + "books already purchased:" + white);
+                //booksPurchase();
             }
+        }
     }
-}
 
-    private static void option3() {
 
+    private void purchaseBook() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter ISBN or name to purchase books: ");
+        String searchParameter = scanner.nextLine();
+
+        ArrayList<Book> books = FileHandler.readBooksFromFile("books.txt");
+
+        ArrayList<Book> purchasedBooks = User.getPurchasedBooks(); // Access purchasedBooks directly
+
+        for (Book book : books) {
+            if (book.getIsbn().equals(searchParameter) || book.getTitle().equalsIgnoreCase(searchParameter)) {
+                if (!purchasedBooks.contains(book)) {
+                    purchasedBooks.add(book);
+                }
+            }
+        }
+
+        System.out.println("Purchased Books:");
+        for (Book book : purchasedBooks) {
+            System.out.println(book.getTitle() + " (" + book.getIsbn() + ")");
+        }
     }
+
+
+
+
+
+
+
+
 
 
     public MenuManager() {
@@ -139,10 +167,42 @@ public class MenuManager {
 
                 break;
             case 2:
-                System.out.println("Hey");
+                register();
+                LoginManager.login();
+                Menu();
+                break;
         }
     }
+
+    public static void register() {
+        scanner = new Scanner(System.in);
+        System.out.println("Name : ");
+        String Name = scanner.nextLine();
+        System.out.println("Address: ");
+        String Address = scanner.nextLine();
+        System.out.println("Mail: ");
+        String Mail = scanner.nextLine();
+        System.out.println("Password: ");
+        String Password = scanner.nextLine();
+        ArrayList<User> users = FileHandler.readUsersFromFile(Main.USER_PATH);
+        int count = 0;
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).getEmail().equals(Mail)) {
+                count++;
+            }
+        }
+        if (count > 0) {
+            System.out.println("This email Address is already taken!");
+        } else {
+            User user = new User(Name, Address, Mail, Password);
+            FileHandler.writeNewRegister(user);
+            System.out.println("You have successfully registered! Welcome to Amazon!");
+
+        }
+
+    }
 }
+
 
 
 
